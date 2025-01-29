@@ -15,6 +15,10 @@ const OrderController = require('./src/controllers/OrdersController');
 
 const orderController = new OrderController();
 
+const PaymentController = require('./src/controllers/PaymentController');
+
+const paymentController = new PaymentController();
+
 let authToken = null;
 
 const criar_pedido = async () => {
@@ -103,7 +107,7 @@ const comprar = async () =>{
 
                 if (criar) {
                   
-                    console.log("Realizando compras");
+                    //console.log("Realizando compras");
                   
                     const repetirCompra = await comprar();
                     resolve(repetirCompra);
@@ -117,7 +121,7 @@ const comprar = async () =>{
             
             } else {
             
-                console.log('Compra finalizada.');
+                //console.log('Compra finalizada.');
             
                 resolve(true);
             
@@ -419,6 +423,49 @@ const autenticacao_login = async () => {
 
 }
 
+const iniciar_pagamento = async () => {
+
+    return new Promise( (resolve) => {
+
+        console.log(" ");
+        console.log("-----Realizar Pagamento-----");
+        console.log(" ");
+
+        rl.question('Informe o seu saldo : ', async (saldo) => {
+            
+            try {
+
+                const token = `${authToken}`;  
+
+                const req = {
+                    headers: {
+                        authorization: `Bearer ${token}`  
+                    
+                    },
+                    body:{
+                        saldo
+                    }
+                };
+
+                const res = {
+                    status: (code) => ({
+                        json: (data) => ({ code, data })
+                    })
+                };
+            
+                const response = await paymentController.payment(req, res);
+
+            }catch(error){
+                console.log("Erro ao realizar pagamento");
+            }
+
+        });
+
+
+
+    });
+}
+
 const menu = () => {
 
     console.log('-------------------');
@@ -481,17 +528,21 @@ const main = async () => {
     
     const criar = await comprar();
     if(criar){
-        console.log("Realizando compras");
         const carrinho = await carrinho_compras();
         if(carrinho){
             console.log('Carrinho encontrado');
         }else{
             console.log("Falha ao buscar produto");
-        }
-
-        
+        }    
     }else{
         console.log('Erro ao realizar pedido');
+    }
+
+    const pagamento = await iniciar_pagamento();
+    if(pagamento){
+        console.log("Pagamento finalizado");
+    }else{
+        console.log("Erro ao realizar pagamento");
     }
 
 

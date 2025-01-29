@@ -69,7 +69,7 @@ class UserController {
     
             const usuario = jwt.verify(token, process.env.JWT_SECRET);
 
-            console.log('Usuário autenticado:', usuario);
+            //console.log('Usuário autenticado:', usuario);
     
             return usuario;
     

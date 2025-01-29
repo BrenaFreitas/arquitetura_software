@@ -25,8 +25,6 @@ class OrderControllers {
 
             const token = authHeader.split(' ')[1]; 
             
-            console.log('Token de autenticação:', token);
-
             if (!token) {
                 return res.status(400).json({ message: 'Token não fornecido ou inválido' });
             }
@@ -34,24 +32,14 @@ class OrderControllers {
             const usuario = await usuarioControllers.pegarUsuarioAtravesDoToken(token);
 
             const user_id = usuario.id;
-
-            console.log('ID do usuário:', user_id);
-            
+    
             const {id_product, quantity} = req.body;
-
-            console.log('Product ID:', id_product);
-
-            console.log('Quantity:', quantity);
 
             const productController = new ProductController();
             
             const response = await productController.getProductDetails(req,res);
 
             if(response){
-
-                console.log("produto encontrado");
-
-                console.log("Produto encontrado:", response.data.product.name_product);
 
                 const orderInstance = new Order();
 
@@ -85,8 +73,6 @@ class OrderControllers {
 
             const token = authHeader.split(' ')[1]; 
             
-            console.log('Token de autenticação:', token);
-
             if (!token) {
                 return res.status(400).json({ message: 'Token não fornecido ou inválido' });
             }

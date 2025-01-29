@@ -1,21 +1,17 @@
 
 class Payment {
   
-  constructor(id_payment,status_payment = 'Pending'){
+  constructor(order_id,id_payment,status_payment = 'Pending'){
   
     this.id_payment = id_payment ;
+
+    this.order_id = order_id;
   
     this.status_payment = status_payment;
   
   }
 
-  showPayment() {
-  
-    console.log(`Código do pagamento: ${this.id_payment}`);
-  
-    console.log(`Status do pagamento: ${this.status_payment}`);
-  
-  }
+
 
 }
 

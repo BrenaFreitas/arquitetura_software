@@ -28,18 +28,6 @@ class Order {
       
     }
     
-
-    showOrder() {
-        
-        console.log(`Código do pedido: ${this.id_order}`);
-        
-        console.log(`Código do cliente : ${this.id_user}`);
-        
-        console.log(`Total do pedido: ${this.total_price_order}`);
-        
-        console.log(`Status do pedido: ${this.status}`);
-    }
-
     static getOrderByUserId(userId) {
         return Order.orders.find(order => order.user_id === userId) || null;
     }

@@ -1,6 +1,6 @@
-const Payments = require('../models/Payments');
+const Payments = require('../models/Payment');
 
-class PaymentsController {
+class PaymentController {
 
     async statePayment(req, res) {
         

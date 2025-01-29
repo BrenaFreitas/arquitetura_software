@@ -75,10 +75,12 @@ class User {
 (async () => {
   const hashedPassword = await new User().hashPassword('123456');
   const hashedPasswordMaria = await new User().hashPassword('123456');
+  const hashedPasswordAdmin= await new User().hashPassword('admin');
 
   User.users = [
     new User(1, 'João', 'joao@hotmail.com', hashedPassword),
-    new User(2, 'Maria', 'maria@gmail.com', hashedPasswordMaria)
+    new User(2, 'Maria', 'maria@gmail.com', hashedPasswordMaria),
+    new User(3, 'admin','admin@gmail.com', hashedPasswordAdmin )
   ];
 
 }
