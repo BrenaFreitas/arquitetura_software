@@ -1,12 +1,12 @@
-const readline = require('readline');
-const { stdin: input, stdout: output } = require('node:process');
-const rl = readline.createInterface({ input, output });
-
-const UserController = require('../controllers/UserController')
+const UserController = require('../controllers/UserController');
 
 const userController = new UserController();
 
+const rl = require('../config/readLineConfig');
+
 let authToken = null;
+
+
 
 const criar_usuario = async () => {
 
@@ -43,9 +43,9 @@ const criar_usuario = async () => {
                     
                         const response = await userController.register(req, res);
                     
-                        console.log('-------------------');
+                        console.log('--------------------------------');
                       
-                        console.log('Register successful!');
+                        //console.log('Register successful!\n');
 
                         console.log('Id do usuário:', response.data.user.id_user);
 
@@ -80,7 +80,7 @@ const autenticacao_login = async () => {
 
         console.log('');
 
-        console.log('----Login de usuário----');
+        console.log('--------Login de usuário--------');
 
         console.log('');
 
@@ -106,13 +106,9 @@ const autenticacao_login = async () => {
                 
                     const response = await userController.login(req, res);
                 
-                    console.log('-------------------');
-                  
-                    console.log('Login successful!');
+                    console.log('--------------------------------');
 
-                    console.log('Token:', response.data);
-
-                    authToken = response.data;
+                    authToken = response.data.token;
 
                     resolve(authToken);
 
@@ -120,6 +116,7 @@ const autenticacao_login = async () => {
                     
                     console.error('Falha ao autenticar usuário:', error.response?.data?.message || error.message);
 
+                    rl.close();
                     resolve(false);
 
                 }
@@ -133,9 +130,4 @@ const autenticacao_login = async () => {
 }
 
 
-const limparTela = () => {
-    console.clear(); 
-};
-
-
-module.exports = {criar_usuario, autenticacao_login};
+module.exports = { criar_usuario, autenticacao_login, rl };

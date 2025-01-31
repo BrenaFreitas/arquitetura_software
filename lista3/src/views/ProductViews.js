@@ -1,16 +1,7 @@
-const readline = require('readline');
-
-const { stdin: input, stdout: output } = require('node:process');
-
-const rl = readline.createInterface({ input, output });
-
-
-
-const ProductController = require('../controllers/ProductController')
+const ProductController = require('../controllers/ProductController');
 
 const productController = new ProductController();
 
-let authToken = null;
 
 const listar_produtos = async () => {
 
@@ -30,7 +21,7 @@ const listar_produtos = async () => {
                 })
             };
 
-            const response = await productController.list(req, res);
+            const response = await productController.listProducts(req, res);
 
             console.log('-------------------');
 
@@ -66,4 +57,63 @@ const listar_produtos = async () => {
 
 };
 
-module.exports = { listar_produtos };
+
+const buscar_produto = async () => {
+
+    return new Promise((resolve) => {
+
+        console.log('');
+
+        console.log('----Buscar produto----');
+
+        console.log('');
+
+        rl.question('Informe o código do produto: ', async (id_product) => {
+
+            try{
+
+                const req = {
+                    body: {
+                        id_product
+                    }
+                };
+
+                const res = {
+                    status: (code) => ({
+                        json: (data) => ({ code, data })
+                    })
+                }
+
+                const response = await productController.getProductDetails(req, res);
+
+                console.log('-------------------');
+
+                console.log('Produto encontrado:');
+
+                console.log('Id do produto:', response.data.product.id_product);
+
+                console.log('Nome do produto:', response.data.product.name_product);
+
+                console.log('Preço do produto:', response.data.product.price_product);
+
+                console.log('Quantidade em estoque:', response.data.product.stock_product);
+
+                console.log('-------------------');
+
+                resolve(true);
+
+
+            }catch (error){
+
+                console.error('Falha ao buscar produto:',error.response);
+                
+                resolve(false);
+            }
+
+        });
+    });
+
+}
+
+
+module.exports = { listar_produtos , buscar_produto };

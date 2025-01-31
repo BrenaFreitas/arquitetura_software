@@ -32,6 +32,10 @@ class Order {
         return Order.orders.find(order => order.user_id === userId) || null;
     }
 
+    static getOrderByOrderId(orderId) {
+        return Order.orders.find(order => order.id_order === orderId) || null;
+    }
+
     static getOrders() {
   
         return Order.orders;

@@ -1,26 +1,38 @@
 const Payments = require('../models/Payment');
+const OrdersController = require('./OrdersController');
+const orderController = new OrdersController();
 
 class PaymentController {
 
-    async statePayment(req, res) {
-        
-        const { id } = req.params;
-        
-        const { state } = req.body;
+    async payment(req, res) {
 
-        const payment = await Payments.query().findById (id);
+        const {saldo} = req.body;
 
-        if (!payment) {
+        const order = await orderController.listOrder(req, res);
+
+        const orderValue = order.data.order.totalOrderValue;       
         
-            return res.status(404).json({ message: 'Pagamento não encontrado' });
+        const orderId = order.data.order.id_order;
+
+        try {
+
+            const payment = await Payments.doPayment(saldo, orderValue, orderId);
+
+            if (!payment) {
+            
+                return res.status(404).json({ message: 'Pagamento não encontrado' });
+            
+            }
+
+            return res.json({ message: 'Pagamento efetuado com sucesso', payment });
+
+
+        }catch (error) {
         
+            return res.status(500).json({ message: error.message });
         }
 
-        await Payments.query().findById(id).patch({ state });
-
-        return res.json({ message: 'Pagamento atualizado com sucesso' });
     }
-
 
 }
 

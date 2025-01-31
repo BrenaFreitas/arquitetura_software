@@ -2,7 +2,7 @@ const Order = require('../models/Order');
 const ProductController = require('../controllers/ProductController');
 const UsuarioController = require('../controllers/UserController');
 
-const usuarioControllers = new UsuarioController();
+const userController = new UsuarioController();
 
 const jwt = require('jsonwebtoken');
 
@@ -17,22 +17,10 @@ class OrderControllers {
 
         try {
 
-            const authHeader = req.headers.authorization;
+            const user = await userController.getUserByToken(req,res);
 
-            if (!authHeader || !authHeader.startsWith('Bearer ')) {
-                return res.status(401).json({ message: 'Token não fornecido ou inválido' });
-            }
+            const user_id  = user.data.usuario.id;
 
-            const token = authHeader.split(' ')[1]; 
-            
-            if (!token) {
-                return res.status(400).json({ message: 'Token não fornecido ou inválido' });
-            }
-    
-            const usuario = await usuarioControllers.pegarUsuarioAtravesDoToken(token);
-
-            const user_id = usuario.id;
-    
             const {id_product, quantity} = req.body;
 
             const productController = new ProductController();
@@ -65,33 +53,24 @@ class OrderControllers {
 
         try {
 
-            const authHeader = req.headers.authorization;
+            const user = await userController.getUserByToken(req,res);
 
-            if (!authHeader || !authHeader.startsWith('Bearer ')) {
-                return res.status(401).json({ message: 'Token não fornecido ou inválido' });
-            }
+            const user_id  = user.data.usuario.id;
 
-            const token = authHeader.split(' ')[1]; 
-            
-            if (!token) {
-                return res.status(400).json({ message: 'Token não fornecido ou inválido' });
-            }
-    
-            const usuario = await usuarioControllers.pegarUsuarioAtravesDoToken(token);
-
-            const user_id = usuario.id;
-
-            //console.log('ID do usuário:', user_id);
+            console.log('ID do usuário:', user_id);
 
             const order = await Order.getOrderByUserId(user_id);
             
             if (!order) {
                 return res.status(404).json({ message: 'No products found' });
             }
+          
             return res.status(200).json({ order });
 
         } catch(error){
+          
             return res.status(500).json({ message: error.message });
+        
         }
     }
 }
