@@ -4,6 +4,7 @@ class User {
 
   static currentId = 0; 
 
+  // constructor para criar um novo usuário
   constructor(name_user,email_user,password_user){
   
     this.id_user = User.getId();
@@ -17,15 +18,12 @@ class User {
   }
 
   static getUsers() {
-  
     return User.users;
-  
   }
 
+  // Método para pegar o id
   static getId() {
-
     return User.currentId++;
-
   }
 
   // Método para verificar a senha
@@ -44,6 +42,7 @@ class User {
   
   }
 
+  // Método para encontrar o usuário pelo email
   static async findByEmail(email) {
    
     const usuario = User.users.find(usuario => usuario.email_user === email);
@@ -51,6 +50,7 @@ class User {
     return usuario||null;
   }
 
+  // Método para adicionar um novo usuário
   static async addNewUser(name,email,password){
 
     const user =  new User(name,email,password);
@@ -72,6 +72,7 @@ class User {
 
 }
 
+// Array de usuários
 (async () => {
   const hashedPassword = await new User().hashPassword('123456');
   const hashedPasswordMaria = await new User().hashPassword('123456');

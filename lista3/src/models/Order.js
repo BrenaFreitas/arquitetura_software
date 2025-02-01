@@ -16,16 +16,7 @@ class Order {
     }
 
     static getId() {
-
         return Order.currentId++;
-    
-        
-    }
-
-    static getUOrders() {
-  
-        return Order.orders;
-      
     }
     
     static getOrderByUserId(userId) {
@@ -37,9 +28,7 @@ class Order {
     }
 
     static getOrders() {
-  
         return Order.orders;
-      
     }
     
 

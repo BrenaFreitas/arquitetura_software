@@ -1,19 +1,19 @@
+const rl = require('../config/readLineConfig');
 const ProductController = require('../controllers/ProductController');
-
 const productController = new ProductController();
 
+const question = (question) => {
+    return new Promise((resolve) => rl.question(question, resolve));
+};
 
-const listar_produtos = async () => {
+
+const listar_produtos = async (authToken) => {
 
     return new Promise(async (resolve) => {
 
         try {
 
-            const req = {
-                headers: {
-                    authorization: authToken
-                }
-            };
+            const req = {};
 
             const res = {
                 status: (code) => ({

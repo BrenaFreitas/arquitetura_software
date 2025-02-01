@@ -1,119 +1,147 @@
-const readline = require('readline');
+const rl = require('../config/readLineConfig');
 const OrderController = require('../controllers/OrdersController');
-
-const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
 const orderController = new OrderController();
 
-const criar_pedido = async () => {
+/** Função para pergunta */
+const question = (question) => {
+    return new Promise((resolve) => rl.question(question, resolve));
+};
 
-    return new Promise((resolve) => {
+/** Função para mostrar pedido */
+const showOrder = (response) => {
 
-        console.log('');
+    console.log("                       ");
+    console.log("--------PEDIDO---------");
+    console.log("Id do pedido:", response.data.order.id_order);
+    console.log("Id do usuário:", response.data.order.user_id);
+    console.log("Total do pedido: ",response.data.order.totalOrderValue);
+    console.log("Quantidade de itens :",response.data.order.quantity_order);
 
-        console.log('-------- Iniciar pedido --------');
-
-        console.log('');
-
-        rl.question('Informe o código do produto: ', async (id_product) => {
-
-            rl.question('Infome a quantidade que deseja comprar: ', async (quantity) => {
-                
-            try {
-
-                const token = `${authToken}`;  
-
-                const req = {
-                    headers: {
-                        authorization: `Bearer ${token}`  
-                    
-                    },
-                    body: {
-                        id_product,
-                        quantity
-                    }
-                };
-
-    
-                const res = {
-                    status: (code) => ({
-                        json: (data) => {
-                            console.log(`Status: ${code}`);
-                            console.log("Resposta:", data);
-                            return { code, data };
-                        }
-                    })
-                };
-    
-                const response = await orderController.createOrder(req,res);
-
-                console.log("                       ");
-                console.log("--------PEDIDO---------");
-                console.log("Id do pedido:", response.data.order.id_order);
-                console.log("Id do usuário:", response.data.order.user_id);
-                console.log("Total do pedido: ",response.data.order.totalOrderValue);
-                console.log("Quantidade de itens :",response.data.order.quantity_order);
-
-
-                resolve(true);
-
-                
-            }catch(error){
-
-                console.error('Falha ao criar pedido');
-
-                resolve(false);
-            }
-
-            });
-
-
-        });
-
-    });
 }
 
+/** Função para criar pedido */
+const criar_pedido = async (authToken) => {
 
-const comprar = async () =>{
+    console.log('');
 
-    return new Promise((resolve) => {
+    console.log('-------- Iniciar pedido --------');
+
+    console.log('');
 
         
-        console.log('');
+    try {
 
-        console.log('------- Sessão de compras ------');
+        const id_product = await question('Informe o código do produto: ');
 
-        console.log('');
+        const quantity = await question('Informe a quantidade do produto: ');
 
-        rl.question('Deseja realizar compras?(SIM/NÃO) ', async (answer) => {
+        const token = `${authToken}`;  
 
-            if(answer.toLowerCase() === 'sim'){
-                const criar = await criar_pedido();
+        const req = {
+            headers: {
+                authorization: `Bearer ${token}`  
+            
+            },
+            body: {
+                id_product,
+                quantity
+            }
+        };
 
-                if (criar) {
-                                    
-                    const repetirCompra = await comprar();
-                    resolve(repetirCompra);
-               
-                
-                } else {
-                
-                    console.log('Erro ao realizar pedido');
-                    resolve(false);
-                }
+
+        const res = {
+            status: (code) => ({
+                json: (data) => ({ code, data })
+            })
+        };
+    
+
+        const response = await orderController.createOrder(req,res);
+
+        showOrder(response);
+
+        return true;
+
+        
+    }catch(error){
+
+        console.error('Falha ao criar pedido');
+
+        return false;
+    }
+
+  
+}
+
+/** Função para realizar compras */
+const comprar = async (authToken) =>{
+
+    console.log('');
+
+    console.log('------- Sessão de compras ------');
+
+    console.log('');
+
+    try {
+
+        const answer = await question('Deseja realizar uma nova compra? (sim/nao) ');
+
+        if(answer.toLowerCase() === 'sim'){
+            const criar = await criar_pedido(authToken);
+
+            if (criar) {
+                                
+                const repetirCompra = await comprar(authToken);
+                resolve(repetirCompra);
+            
             
             } else {
-                        
-                resolve(true);
             
+                console.log('Erro ao realizar pedido');
+                return false;
             }
-        });
+        
+        } else {
+                    
+            return false;
+        
+        }
 
-    });
+    }catch(error){
+
+        console.error('Falha ao realizar compra:', error.response?.data?.message || error.message);
+
+        return false;
+    }
+
 
 }
 
+/** Função para mostrar carrinho de compras */
+const showCart = (response) => {
 
-const carrinho_compras = async() =>{
+    console.log('-------------------');
+
+            console.log('Carrinho de compras:');
+
+            console.log('-------------------');
+
+            const order = response.data.order;
+
+            
+            console.log('Id do pedido :', order.id_order);
+
+            console.log('Id do usuário:', order.user_id);
+
+            console.log('Valor total do pedido:', order.totalOrderValue);
+
+            console.log('Quantidade de itens do pedido:', order.quantity_order);
+
+            console.log('-------------------');
+}
+
+/** Função para carrinho de compras */
+const carrinho_compras = async(authToken) =>{
 
     return new Promise( async (resolve) => {
 
@@ -136,25 +164,8 @@ const carrinho_compras = async() =>{
 
             const response = await orderController.listOrder(req, res);
 
-            console.log('-------------------');
-
-            console.log('Carrinho de compras:');
-
-            console.log('-------------------');
-
-            const order = response.data.order;
-
+            showCart(response);
             
-            console.log('Id do pedido :', order.id_order);
-
-            console.log('Id do usuário:', order.user_id);
-
-            console.log('Valor total do pedido:', order.totalOrderValue);
-
-            console.log('Quantidade de itens do pedido:', order.quantity_order);
-
-            console.log('-------------------');
-
            resolve(true);
 
 
@@ -168,4 +179,5 @@ const carrinho_compras = async() =>{
     });
 }
 
-module.exports = { criar_pedido, comprar , carrinho_compras};
+
+module.exports = { criar_pedido, comprar , showCart, carrinho_compras};

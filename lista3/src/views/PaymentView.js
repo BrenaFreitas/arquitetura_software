@@ -1,54 +1,52 @@
-const readline = require('readline');
+const rl = require('../config/readLineConfig');
 const PaymentController = require('../controllers/PaymentController');
-
-const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
 const paymentController = new PaymentController();
 
+/** Função para pergunta */
+const question = (question) => {
+    return new Promise((resolve) => rl.question(question, resolve));
+};
 
-const iniciar_pagamento = async () => {
+/** Função para realizar pagamento */
+const iniciar_pagamento = async (authToken) => {
 
+    console.log(" ");
+    console.log("-----Realizar Pagamento-----");
+    console.log(" ");
 
-    return new Promise( (resolve) => {
+    try {
 
-        console.log(" ");
-        console.log("-----Realizar Pagamento-----");
-        console.log(" ");
+        const saldo = await question('Informe o seu saldo : ');
 
-        rl.question('Informe o seu saldo : ', async (saldo) => {
+        const token = `${authToken}`;  
+
+        const req = {
+            headers: {
+                authorization: `Bearer ${token}`  
             
-            try {
-
-                const token = `${authToken}`;  
-
-                const req = {
-                    headers: {
-                        authorization: `Bearer ${token}`  
-                    
-                    },
-                    body:{
-                        saldo
-                    }
-                };
-
-                const res = {
-                    status: (code) => ({
-                        json: (data) => ({ code, data })
-                    })
-                };
-            
-                const response = await paymentController.payment(req, res);
-
-                resolve(true);
-
-            }catch(error){
-                console.log("Erro ao realizar pagamento");
+            },
+            body:{
+                saldo
             }
+        };
 
-        });
+        const res = {
+            status: (code) => ({
+                json: (data) => ({ code, data })
+            })
+        };
+    
+        const response = await paymentController.payment(req, res);
 
 
+        return true;
 
-    });
+    }catch(error){
+        console.log("Erro ao realizar pagamento");
+        return false;
+    }
+
+
 }
 
 module.exports = { iniciar_pagamento };

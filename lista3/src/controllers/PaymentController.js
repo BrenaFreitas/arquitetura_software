@@ -4,6 +4,17 @@ const orderController = new OrdersController();
 
 class PaymentController {
 
+    /**
+     * @async
+     * @function payment
+     * @description Processa um pagamento baseado no saldo do usuário e no valor do pedido.
+     * @param {Object} req - Objeto de requisição do Express contendo o corpo da requisição.
+     * @param {Object} req.body - Corpo da requisição contendo informações do usuário.
+     * @param {number} req.body.saldo - Saldo atual do usuário.
+     * @param {Object} res - Objeto de resposta do Express para retornar os resultados.
+     * @returns {Promise<Object>} Retorna um JSON indicando sucesso ou falha do pagamento.
+    */
+
     async payment(req, res) {
 
         const {saldo} = req.body;
@@ -24,7 +35,7 @@ class PaymentController {
             
             }
 
-            return res.json({ message: 'Pagamento efetuado com sucesso', payment });
+            return res.status(201).json({payment});
 
 
         }catch (error) {

@@ -13,8 +13,15 @@ dotenv.config();
 
 class OrderControllers {
 
-    async createOrder(req, res) { 
+    /**
+     * @description Cria um pedido
+     * @param {*} req
+     * @param {*} res
+     *  @returns Retorna um JSON com os detalhes do pedido ou uma mensagem de erro.
+     */
 
+    async createOrder(req, res) { 
+  
         try {
 
             const user = await userController.getUserByToken(req,res);
@@ -49,8 +56,15 @@ class OrderControllers {
 
     }
 
-    async listOrder(req, res) { 
+    /**
+     * @description Listar pedidos de um usuário
+     * @param {*} req 
+     * @param {*} res 
+     * @returns Retorna um JSON com os detalhes do pedido ou uma mensagem de erro.
+     */
 
+    async listOrder(req, res) { 
+  
         try {
 
             const user = await userController.getUserByToken(req,res);

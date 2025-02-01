@@ -3,6 +3,15 @@ const Product = require('../models/Product');
 
 class ProductController {
 
+    /**
+     * @async
+     * @function listProducts
+     * @description Lista todos os produtos cadastrados.
+     * @param {Object} req - Objeto de requisição do Express.
+     * @param {Object} res - Objeto de resposta do Express.
+     * @returns {Promise<Object>} Retorna um JSON com a lista de produtos ou uma mensagem de erro.
+    */
+
     async listProducts(req, res) {
       
         try{
@@ -18,6 +27,13 @@ class ProductController {
         }
 
     }
+
+    /**
+     * @description Get product details
+     * @param {Object} req - Objeto de requisição do Express.
+     * @param {Object} res - Objeto de resposta do Express.
+     * @returns {Promise<Object>} Retorna um JSON com os detalhes do produto ou uma mensagem de erro.
+     */
 
     async getProductDetails(req, res) {
 
