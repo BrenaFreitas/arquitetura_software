@@ -23,11 +23,11 @@ const listar_produtos = async (authToken) => {
 
             const response = await productController.listProducts(req, res);
 
-            console.log('-------------------');
+            console.log('--------------------------------');
 
             console.log('Produtos disponíveis:');
 
-            console.log('-------------------');
+            console.log('--------------------------------');
 
             response.data.products.forEach(product => {
 
@@ -39,7 +39,7 @@ const listar_produtos = async (authToken) => {
 
                 console.log('Quantidade em estoque:', product.stock_product);
 
-                console.log('-------------------');
+                console.log('--------------------------------');
 
             });
 
@@ -86,7 +86,7 @@ const buscar_produto = async () => {
 
                 const response = await productController.getProductDetails(req, res);
 
-                console.log('-------------------');
+                console.log('--------------------------------');
 
                 console.log('Produto encontrado:');
 
@@ -98,7 +98,7 @@ const buscar_produto = async () => {
 
                 console.log('Quantidade em estoque:', response.data.product.stock_product);
 
-                console.log('-------------------');
+                console.log('--------------------------------');
 
                 resolve(true);
 

@@ -24,7 +24,7 @@ class OrderControllers {
   
         try {
 
-            const user = await userController.getUserByToken(req,res);
+            const user = await userController.isValidaUserByToken(req,res);
 
             const user_id  = user.data.usuario.id;
 
@@ -67,7 +67,7 @@ class OrderControllers {
   
         try {
 
-            const user = await userController.getUserByToken(req,res);
+            const user = await userController.isValidaUserByToken(req,res);
 
             const user_id  = user.data.usuario.id;
 

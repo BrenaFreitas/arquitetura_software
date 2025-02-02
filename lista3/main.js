@@ -25,6 +25,8 @@ const menu = () => {
 
     console.log('2 - Comprar produto');
 
+    console.log('3 - Realizar pagamento');
+
     console.log('-------------------');
 
 };
@@ -55,13 +57,12 @@ const main = async () => {
         console.log('Usuario autenticado');
     }else{
         console.log('Falha na autenticação.');
+        process.exit(0);
     }
     
+    while(auth){
 
-    menu();
-
-
-    while(true){
+        menu();
 
         const option = await question('Escolha uma opção: ');
 
@@ -108,16 +109,24 @@ const main = async () => {
                         console.log("Falha ao buscar produto");
                     }  
                     
-                    const pagamento = await iniciar_pagamento(auth);
-
-                    if(pagamento){
-                        console.log("Pagamento finalizado");
-                    }else{
-                        console.log("Erro ao realizar pagamento");
-                    }
-                
+                 
                 }
                    
+                break;
+
+
+            
+            case '3':
+
+                limparTela();
+
+                const pagamento = await iniciar_pagamento(auth);
+
+                if(pagamento){
+                    console.log("Pagamento finalizado");
+                }else{
+                    console.log("Erro ao realizar pagamento");
+                }
                 break;
         }
 

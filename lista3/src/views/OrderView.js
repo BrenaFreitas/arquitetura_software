@@ -91,8 +91,7 @@ const comprar = async (authToken) =>{
 
             if (criar) {
                                 
-                const repetirCompra = await comprar(authToken);
-                resolve(repetirCompra);
+                await comprar(authToken);
             
             
             } else {
@@ -103,7 +102,7 @@ const comprar = async (authToken) =>{
         
         } else {
                     
-            return false;
+            return true;
         
         }
 
